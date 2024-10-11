@@ -49,7 +49,7 @@ router.post('/signin', (req, res) => {
 
 router.get('/', (req, res) => {
   User.findOne(req.body.username).then(data => {
-    res.json({ result: true, firstName: data.firstName, username: data.username, });
+    res.json({ result: true, firstName: data.firstName, username: data.username, token: data.token });
   });
 })
   module.exports = router;
