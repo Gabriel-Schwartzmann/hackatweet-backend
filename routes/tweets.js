@@ -12,14 +12,14 @@ router.post('/', (req, res) => {
     }
 
 
-    User.findOne({ token: req.body.token }).then(userData => {
-        if (userData === null) {
+    User.findOne({ token: req.body.token }).then(user => {
+        if (user === null) {
             res.json({ result: false, error: 'User not found' });
             return;
         }
 
         const newTweet = new Tweet({
-            author: userData.id,
+            author: user._id,
             content: req.body.content,
             createdOn: new Date(),
         });
@@ -30,12 +30,7 @@ router.post('/', (req, res) => {
     })
 })
 
-router.get('all/:token', (req, res) => {
-    User.findOne({ token: req.params.token }).then(userData => {
-        if (userData === null) {
-            res.json({ result: false, error: 'User not found' })
-            return;
-        }
+router.get('/', (req, res) => {
         Tweet.find()
             .populate('author', ['username', 'firstName'])
             .populate('likes', ['username'])
@@ -44,7 +39,7 @@ router.get('all/:token', (req, res) => {
                 res.json({ result: true, tweets });
             });
     });
-});
+
 
 router.get('/trends/:token', (req, res) => {
     User.findOne({ token: req.params.token }).then(user => {
